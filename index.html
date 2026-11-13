@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Забота рядом — помощь пожилым людям на дому</title>
+<meta name="description" content="Социальная, бытовая и гигиеническая помощь пожилым людям на дому. Бесплатная консультация.">
+<style>
+  :root{
+    --bg:#fbf8f3; --surface:#ffffff; --ink:#1f2a2e; --muted:#55636a;
+    --brand:#2f6f5e; --brand-dark:#22534a; --brand-soft:#e4f0ec;
+    --accent:#e08a3c; --accent-soft:#fcefe2; --line:#e6e0d6;
+    --radius:18px; --fs:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;font-size:var(--fs);line-height:1.6;color:var(--ink);background:var(--bg)}
+  body.large{--fs:22px}
+  body.contrast{--bg:#fff;--surface:#fff;--ink:#000;--muted:#000;--brand:#000;--brand-dark:#000;--brand-soft:#fff;--accent:#000;--accent-soft:#fff;--line:#000}
+  body.contrast .card, body.contrast .step, body.contrast .price{border:2px solid #000}
+  img{max-width:100%}
+  a{color:var(--brand)}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{line-height:1.25;margin:0 0 .5em}
+  h1{font-size:2.6em}
+  h2{font-size:1.9em}
+  h3{font-size:1.2em}
+  section{padding:72px 0}
+  .lead{font-size:1.15em;color:var(--muted);max-width:760px}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:16px 28px;border-radius:999px;border:0;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;transition:.15s}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{filter:brightness(.92)}
+  .btn-ghost{background:transparent;color:var(--brand);border:2px solid var(--brand)}
+  .btn-ghost:hover{background:var(--brand-soft)}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+  /* a11y bar */
+  .a11y{background:var(--brand-dark);color:#fff;font-size:15px}
+  .a11y .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
+  .a11y button{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+  .a11y button[aria-pressed="true"]{background:#fff;color:var(--brand-dark)}
+
+  /* header */
+  header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:14px;padding-bottom:14px}
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-weight:700;font-size:1.25em}
+  .logo-mark{width:46px;height:46px;border-radius:14px;background:var(--brand);display:grid;place-items:center;color:#fff;font-size:24px}
+  .logo small{display:block;font-weight:400;font-size:.6em;color:var(--muted)}
+  nav ul{list-style:none;display:flex;gap:22px;white-space:nowrap;margin:0;padding:0}
+  nav a{text-decoration:none;color:var(--ink);font-weight:500}
+  nav a:hover{color:var(--brand)}
+  .phone{text-align:right;font-weight:700;font-size:1.2em;color:var(--ink);text-decoration:none;white-space:nowrap}
+  .phone small{display:block;font-weight:400;font-size:.6em;color:var(--muted)}
+  .burger{display:none;background:none;border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:20px;cursor:pointer}
+
+  /* hero */
+  .hero{background:linear-gradient(135deg,var(--brand-soft),var(--bg) 60%);padding:80px 0 90px}
+  .hero .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center}
+  .hero-tag{display:inline-block;background:var(--accent-soft);color:#9a5418;font-weight:600;padding:6px 14px;border-radius:999px;margin-bottom:18px;font-size:.85em}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin:28px 0}
+  .hero-facts{display:flex;gap:32px;flex-wrap:wrap;margin-top:12px}
+  .hero-facts b{display:block;font-size:1.7em;color:var(--brand)}
+  .hero-facts span{color:var(--muted);font-size:.9em}
+  .hero-visual{background:var(--surface);border-radius:28px;padding:28px;box-shadow:0 20px 50px rgba(47,111,94,.15);position:relative}
+  .hero-visual .illus{aspect-ratio:4/3;border-radius:20px;background:
+     radial-gradient(circle at 30% 35%,#f6d7b8 0 18%,transparent 19%),
+     radial-gradient(circle at 68% 40%,#e9c6a4 0 16%,transparent 17%),
+     radial-gradient(ellipse at 30% 85%,var(--brand) 0 30%,transparent 31%),
+     radial-gradient(ellipse at 68% 88%,var(--accent) 0 27%,transparent 28%),
+     linear-gradient(#f3ece1,#efe5d6);display:grid;place-items:end center;color:var(--muted);font-size:.8em;padding:10px}
+  .hero-badge{position:absolute;left:-18px;bottom:28px;background:var(--surface);border-radius:14px;padding:12px 16px;box-shadow:0 8px 24px rgba(0,0,0,.1);display:flex;gap:10px;align-items:center;font-size:.85em}
+  .hero-badge i{font-style:normal;font-size:24px}
+
+  /* services */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:36px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;transition:.2s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.06)}
+  .card .ico{width:56px;height:56px;border-radius:16px;background:var(--brand-soft);display:grid;place-items:center;font-size:28px;margin-bottom:16px}
+  .card ul{padding-left:20px;margin:10px 0 0;color:var(--muted)}
+  .card li{margin:4px 0}
+
+  /* steps */
+  .steps-sec{background:var(--surface)}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:36px;counter-reset:s}
+  .step{padding:26px;border-radius:var(--radius);background:var(--bg);position:relative}
+  .step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;font-size:1.2em;margin-bottom:14px}
+  .step p{color:var(--muted);margin:0}
+
+  /* prices */
+  .prices{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:36px}
+  .price{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:32px;display:flex;flex-direction:column}
+  .price.featured{border:2px solid var(--brand);box-shadow:0 18px 40px rgba(47,111,94,.15);position:relative}
+  .price.featured::after{content:"Чаще выбирают";position:absolute;top:-14px;left:24px;background:var(--brand);color:#fff;padding:4px 12px;border-radius:999px;font-size:.75em;font-weight:600}
+  .price .sum{font-size:2em;font-weight:700;color:var(--brand);margin:6px 0}
+  .price .sum small{font-size:.45em;color:var(--muted);font-weight:400}
+  .price ul{list-style:none;padding:0;margin:14px 0 24px;flex:1}
+  .price li{padding:6px 0 6px 30px;position:relative}
+  .price li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:700}
+  .note{margin-top:22px;padding:18px 22px;background:var(--accent-soft);border-radius:14px;font-size:.92em}
+
+  /* trust */
+  .trust{background:var(--brand);color:#fff}
+  .trust h2{color:#fff}
+  .trust .lead{color:rgba(255,255,255,.85)}
+  .trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:36px}
+  .trust-grid div{background:rgba(255,255,255,.1);border-radius:var(--radius);padding:24px}
+  .trust-grid b{display:block;font-size:1.1em;margin-bottom:6px}
+  .trust-grid span{color:rgba(255,255,255,.85);font-size:.92em}
+  body.contrast .trust{background:#fff;color:#000;border-top:2px solid #000;border-bottom:2px solid #000}
+  body.contrast .trust h2, body.contrast .trust .lead, body.contrast .trust-grid span{color:#000}
+  body.contrast .trust-grid div{border:2px solid #000}
+
+  /* reviews */
+  .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:36px}
+  .review{background:var(--surface);border-radius:var(--radius);padding:28px;border:1px solid var(--line)}
+  .review p{margin:0 0 16px;font-style:italic}
+  .review .who{display:flex;gap:12px;align-items:center}
+  .review .av{width:44px;height:44px;border-radius:50%;background:var(--brand-soft);display:grid;place-items:center;font-weight:700;color:var(--brand)}
+  .review small{color:var(--muted);display:block}
+
+  /* faq */
+  .faq{max-width:860px;margin-top:30px}
+  details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 22px;margin-bottom:12px}
+  summary{cursor:pointer;font-weight:600;padding:16px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+  summary::after{content:"+";font-size:1.4em;color:var(--brand);line-height:1}
+  details[open] summary::after{content:"−"}
+  details p{margin:0 0 18px;color:var(--muted)}
+
+  /* form */
+  .request{background:var(--surface)}
+  .request .wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:start}
+  form{background:var(--bg);border-radius:24px;padding:32px;border:1px solid var(--line)}
+  label{display:block;font-weight:600;margin:0 0 6px}
+  .field{margin-bottom:18px}
+  input,select,textarea{width:100%;font:inherit;padding:14px 16px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none}
+  .check{display:flex;gap:10px;align-items:flex-start;font-size:.85em;color:var(--muted);margin-bottom:20px}
+  .check input{width:auto;margin-top:6px}
+  .success{display:none;background:var(--brand-soft);border-radius:14px;padding:20px;font-weight:600;color:var(--brand-dark)}
+  .contact-list{list-style:none;padding:0;margin:24px 0 0}
+  .contact-list li{display:flex;gap:14px;margin-bottom:18px}
+  .contact-list i{font-style:normal;width:44px;height:44px;flex:none;border-radius:12px;background:var(--brand-soft);display:grid;place-items:center;font-size:22px}
+  .contact-list small{display:block;color:var(--muted)}
+
+  footer{background:#1d2b2f;color:#c9d3d6;padding:40px 0;font-size:.85em}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  footer a{color:#fff}
+
+  .float-call{position:fixed;right:20px;bottom:20px;z-index:20;box-shadow:0 10px 30px rgba(224,138,60,.45)}
+  .proto{background:var(--accent);color:#fff;font-weight:600;padding:2px 10px;border-radius:6px;margin-left:10px;font-size:13px}
+
+  @media (max-width:1180px){
+    .grid,.prices,.reviews{grid-template-columns:repeat(2,1fr)}
+    .steps,.trust-grid{grid-template-columns:repeat(2,1fr)}
+    nav{display:none}
+    nav.open{display:block;position:absolute;top:100%;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--line);padding:16px 24px}
+    nav.open ul{flex-direction:column;gap:14px}
+    .burger{display:block}
+  }
+  @media (max-width:760px){
+    h1{font-size:2em} h2{font-size:1.6em}
+    section{padding:52px 0}
+    .hero .wrap,.request .wrap{grid-template-columns:1fr}
+    .grid,.prices,.reviews,.steps,.trust-grid{grid-template-columns:1fr}
+    .phone small{display:none}
+    .hero-badge{left:10px}
+    .proto{display:none}
+    .logo small{display:none}
+    .logo{font-size:1.05em}
+    .phone{font-size:0;width:48px;height:48px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+    .phone::before{content:"📞";font-size:22px}
+    .a11y span{display:none}
+    .float-call{left:16px;right:16px;justify-content:center}
+  }
+</style>
+</head>
+<body>
+
+<div class="a11y">
+  <div class="wrap">
+    <span>Работаем ежедневно с 8:00 до 21:00 <b class="proto">ПРОТОТИП · тексты и цены условные</b></span>
+    <div>
+      <button type="button" id="btnLarge" aria-pressed="false">А+ Крупный шрифт</button>
+      <button type="button" id="btnContrast" aria-pressed="false">◐ Версия для слабовидящих</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <a href="#" class="logo">
+      <span class="logo-mark">♥</span>
+      <span>Забота рядом<small>помощь пожилым людям на дому</small></span>
+    </a>
+    <nav id="nav">
+      <ul>
+        <li><a href="#services">Услуги</a></li>
+        <li><a href="#how">Как мы работаем</a></li>
+        <li><a href="#prices">Стоимость</a></li>
+        <li><a href="#reviews">Отзывы</a></li>
+        <li><a href="#faq">Вопросы</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+      </ul>
+    </nav>
+    <a class="phone" href="tel:+78000000000">8 800 000-00-00<small>звонок бесплатный</small></a>
+    <button class="burger" id="burger" aria-label="Меню">☰</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="hero-tag">Социальное обслуживание на дому</span>
+        <h1>Бережная помощь для ваших близких — каждый день</h1>
+        <p class="lead">Помогаем пожилым людям сохранять самостоятельность и достоинство: ухаживаем, поддерживаем в быту, сопровождаем к врачу и просто бываем рядом.</p>
+        <div class="hero-actions">
+          <a href="#request" class="btn btn-primary">Оставить заявку</a>
+          <a href="tel:+78000000000" class="btn btn-ghost">📞 Позвонить нам</a>
+        </div>
+        <div class="hero-facts">
+          <div><b>10+ лет</b><span>опыта работы</span></div>
+          <div><b>350+</b><span>подопечных сейчас</span></div>
+          <div><b>80</b><span>соцработников и сиделок</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="illus">[ здесь будет фотография ]</div>
+        <div class="hero-badge"><i>🛡️</i><span><b>Проверенный персонал</b><br>медкнижки и обучение</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <h2>Чем мы помогаем</h2>
+      <p class="lead">Подбираем набор услуг под конкретного человека: от пары визитов в неделю до ежедневного ухода.</p>
+      <div class="grid">
+        <article class="card">
+          <div class="ico">🤝</div>
+          <h3>Социальная поддержка</h3>
+          <ul><li>Помощь с документами и льготами</li><li>Оплата ЖКУ, запись к врачу</li><li>Связь с соцзащитой и МФЦ</li></ul>
+        </article>
+        <article class="card">
+          <div class="ico">🏠</div>
+          <h3>Бытовая помощь</h3>
+          <ul><li>Уборка, стирка, глажка</li><li>Покупка продуктов и лекарств</li><li>Приготовление еды</li></ul>
+        </article>
+        <article class="card">
+          <div class="ico">🛁</div>
+          <h3>Гигиенический уход</h3>
+          <ul><li>Помощь при умывании и купании</li><li>Смена белья и подгузников</li><li>Уход за лежачими людьми</li></ul>
+        </article>
+        <article class="card">
+          <div class="ico">🩺</div>
+          <h3>Медико-социальная помощь</h3>
+          <ul><li>Контроль приёма лекарств</li><li>Измерение давления и сахара</li><li>Сопровождение в поликлинику</li></ul>
+        </article>
+        <article class="card">
+          <div class="ico">☕</div>
+          <h3>Общение и досуг</h3>
+          <ul><li>Прогулки на свежем воздухе</li><li>Беседы, чтение, игры</li><li>Помощь со смартфоном и видеосвязью</li></ul>
+        </article>
+        <article class="card">
+          <div class="ico">🌙</div>
+          <h3>Сиделка и патронаж</h3>
+          <ul><li>Дневные и ночные дежурства</li><li>Круглосуточный уход</li><li>Помощь после выписки из больницы</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="steps-sec">
+    <div class="wrap">
+      <h2>Как мы работаем</h2>
+      <p class="lead">Всё просто и понятно — без лишних бумаг и ожидания.</p>
+      <div class="steps">
+        <div class="step"><h3>Заявка</h3><p>Вы звоните или оставляете заявку на сайте — перезвоним в течение 15 минут.</p></div>
+        <div class="step"><h3>Знакомство</h3><p>Координатор бесплатно приезжает домой, знакомится и узнаёт потребности.</p></div>
+        <div class="step"><h3>План ухода</h3><p>Составляем индивидуальный план и подбираем подходящего специалиста.</p></div>
+        <div class="step"><h3>Забота</h3><p>Регулярные визиты, отчёты родственникам и постоянная связь с координатором.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="prices">
+    <div class="wrap">
+      <h2>Стоимость услуг</h2>
+      <p class="lead">Часть услуг может предоставляться бесплатно или по льготным тарифам — проконсультируем по вашему случаю.</p>
+      <div class="prices">
+        <div class="price">
+          <h3>Разовая помощь</h3>
+          <div class="sum">от 600 ₽ <small>/ час</small></div>
+          <ul><li>Уборка или покупки</li><li>Сопровождение к врачу</li><li>Без абонемента</li></ul>
+          <a href="#request" class="btn btn-ghost">Заказать</a>
+        </div>
+        <div class="price featured">
+          <h3>Регулярный уход</h3>
+          <div class="sum">от 12 000 ₽ <small>/ месяц</small></div>
+          <ul><li>2–3 визита в неделю</li><li>Быт + гигиена + общение</li><li>Закреплённый специалист</li><li>Отчёты родственникам</li></ul>
+          <a href="#request" class="btn btn-primary">Заказать</a>
+        </div>
+        <div class="price">
+          <h3>Сиделка</h3>
+          <div class="sum">от 2 500 ₽ <small>/ смена</small></div>
+          <ul><li>Дневные или ночные смены</li><li>Уход за лежачими</li><li>Круглосуточно — по запросу</li></ul>
+          <a href="#request" class="btn btn-ghost">Заказать</a>
+        </div>
+      </div>
+      <div class="note">ℹ️ Для одиноких пенсионеров, ветеранов и людей с инвалидностью действует социальное обслуживание по ИППСУ — бесплатно или со скидкой. Поможем оформить.</div>
+    </div>
+  </section>
+
+  <section class="trust">
+    <div class="wrap">
+      <h2>Почему нам доверяют</h2>
+      <p class="lead">Мы понимаем, как важно быть уверенным в тех, кто приходит к вашим родным.</p>
+      <div class="trust-grid">
+        <div><b>Проверенные сотрудники</b><span>Собеседование, проверка документов и медкнижки</span></div>
+        <div><b>Обучение</b><span>Регулярные курсы по уходу и первой помощи</span></div>
+        <div><b>Договор</b><span>Работаем официально, фиксируем все услуги</span></div>
+        <div><b>Замена за 24 часа</b><span>Если специалист заболел — пришлём другого</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="wrap">
+      <h2>Отзывы родственников</h2>
+      <div class="reviews">
+        <div class="review"><p>«Мама живёт одна в другом городе. Теперь я спокойна — Ольга приходит три раза в неделю и всегда присылает мне сообщение после визита.»</p><div class="who"><span class="av">Е</span><div><b>Елена</b><small>дочь подопечной</small></div></div></div>
+        <div class="review"><p>«После операции отца нужен был уход. Сиделку подобрали за один день, очень внимательный и аккуратный человек.»</p><div class="who"><span class="av">А</span><div><b>Андрей</b><small>сын подопечного</small></div></div></div>
+        <div class="review"><p>«Помогли оформить льготы и теперь соцработник приходит бесплатно. Спасибо за терпение и доброту!»</p><div class="who"><span class="av">В</span><div><b>Валентина Ивановна</b><small>78 лет</small></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" style="background:var(--surface)">
+    <div class="wrap">
+      <h2>Частые вопросы</h2>
+      <div class="faq">
+        <details><summary>Как быстро может прийти специалист?</summary><p>Обычно в течение 1–2 дней после знакомства с координатором. В срочных случаях — в день обращения.</p></details>
+        <details><summary>Можно ли получить услуги бесплатно?</summary><p>Да, при наличии права на социальное обслуживание. Мы поможем собрать документы и оформить индивидуальную программу (ИППСУ).</p></details>
+        <details><summary>Что если подопечному не подошёл специалист?</summary><p>Просто сообщите координатору — мы подберём другого сотрудника без дополнительной оплаты.</p></details>
+        <details><summary>Как родственники узнают о визитах?</summary><p>После каждого визита специалист отправляет короткий отчёт в мессенджер или по SMS. Координатор всегда на связи.</p></details>
+        <details><summary>В каких районах вы работаете?</summary><p>Во всех районах города и ближайших пригородах. Уточните адрес по телефону.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="request" class="request">
+    <div class="wrap">
+      <div id="contacts">
+        <h2>Оставьте заявку</h2>
+        <p class="lead">Бесплатно проконсультируем и подберём помощь. Можно просто позвонить — мы всё расскажем.</p>
+        <ul class="contact-list">
+          <li><i>📞</i><div><a href="tel:+78000000000"><b>8 800 000-00-00</b></a><small>бесплатно, ежедневно 8:00–21:00</small></div></li>
+          <li><i>💬</i><div><b>WhatsApp / Telegram</b><small>+7 900 000-00-00</small></div></li>
+          <li><i>📍</i><div><b>г. Город, ул. Примерная, д. 1</b><small>офис, пн–пт 9:00–18:00</small></div></li>
+          <li><i>✉️</i><div><b>info@example.ru</b><small>для писем и документов</small></div></li>
+        </ul>
+      </div>
+      <form id="form" novalidate>
+        <div class="field"><label for="name">Ваше имя</label><input id="name" required placeholder="Например, Анна"></div>
+        <div class="field"><label for="tel">Телефон</label><input id="tel" type="tel" required placeholder="+7 (___) ___-__-__"></div>
+        <div class="field"><label for="who">Кому нужна помощь</label>
+          <select id="who"><option>Себе</option><option>Маме / папе</option><option>Бабушке / дедушке</option><option>Другому родственнику</option></select></div>
+        <div class="field"><label for="svc">Какая помощь нужна</label>
+          <select id="svc"><option>Пока не знаю — нужна консультация</option><option>Социальная поддержка</option><option>Бытовая помощь</option><option>Гигиенический уход</option><option>Медико-социальная помощь</option><option>Сиделка</option></select></div>
+        <div class="field"><label for="msg">Комментарий (необязательно)</label><textarea id="msg" rows="3" placeholder="Кратко опишите ситуацию"></textarea></div>
+        <label class="check"><input type="checkbox" id="agree" checked> Согласен на обработку персональных данных</label>
+        <button class="btn btn-primary" type="submit" style="width:100%;justify-content:center">Жду звонка</button>
+        <div class="success" id="success" role="status">✅ Спасибо! Мы перезвоним вам в течение 15 минут.</div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 «Забота рядом» · Центр социального обслуживания<br>ИНН 0000000000 · Лицензия № 00-0000</div>
+    <div><a href="#">Политика конфиденциальности</a> · <a href="#">Документы организации</a></div>
+  </div>
+</footer>
+
+<a href="tel:+78000000000" class="btn btn-primary float-call" aria-label="Позвонить">📞 Позвонить</a>
+
+<script>
+  const b = document.body;
+  const toggle = (btn, cls) => btn.addEventListener('click', () => {
+    const on = b.classList.toggle(cls);
+    btn.setAttribute('aria-pressed', on);
+  });
+  toggle(document.getElementById('btnLarge'), 'large');
+  toggle(document.getElementById('btnContrast'), 'contrast');
+
+  const nav = document.getElementById('nav');
+  document.getElementById('burger').addEventListener('click', () => nav.classList.toggle('open'));
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+  document.getElementById('form').addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('name'), tel = document.getElementById('tel');
+    let ok = true;
+    [name, tel].forEach(f => { const bad = !f.value.trim(); f.style.borderColor = bad ? '#c0392b' : ''; if (bad) ok = false; });
+    if (!ok) return;
+    e.target.querySelectorAll('.field, .check, button').forEach(el => el.style.display = 'none');
+    document.getElementById('success').style.display = 'block';
+  });
+</script>
+</body>
+</html>
