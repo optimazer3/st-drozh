@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тёплый круг — журнал и лента соцработников</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f3fa; --surface:#fff; --ink:#24213a; --muted:#6b6782; --line:#e7e3f1;
+    --brand:#5b4bd1; --brand-dark:#4335a8; --brand-soft:#ece9fc;
+    --warm:#f08a5d; --warm-soft:#fdeee6; --green:#2e9e7a; --green-soft:#e2f5ee;
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Nunito,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.55;color:var(--ink);background:var(--bg)}
+  button,input,select,textarea{font:inherit;color:inherit}
+  button{cursor:pointer}
+  :focus-visible{outline:3px solid var(--warm);outline-offset:2px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  h1,h2,h3{line-height:1.25;margin:0 0 .4em}
+  .muted{color:var(--muted)}
+  .hidden{display:none!important}
+
+  /* header */
+  header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  header .wrap{display:flex;align-items:center;gap:18px;height:68px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2em;text-decoration:none;color:var(--ink);white-space:nowrap}
+  .logo-mark{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--warm));display:grid;place-items:center;color:#fff;font-size:20px}
+  .logo small{display:block;font-weight:600;font-size:.58em;color:var(--muted)}
+  .tabs{display:flex;gap:4px}
+  .tabs a{padding:8px 16px;border-radius:999px;text-decoration:none;color:var(--muted);font-weight:700}
+  .tabs a.active{background:var(--brand-soft);color:var(--brand-dark)}
+  .search{flex:1;max-width:340px;margin-left:auto;position:relative}
+  .search input{width:100%;padding:10px 14px 10px 38px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg)}
+  .search::before{content:"🔍";position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px}
+  .me{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9em;white-space:nowrap}
+  .proto{background:var(--warm);color:#fff;font-size:12px;font-weight:800;padding:3px 9px;border-radius:6px;letter-spacing:.03em}
+
+  /* layout */
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;padding:24px 20px 60px}
+  aside{display:flex;flex-direction:column;gap:18px}
+  .box{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .box h3{font-size:1.05em;display:flex;align-items:center;gap:8px}
+  .notice{background:var(--warm-soft);border-radius:14px;padding:14px 18px;margin-bottom:18px;font-size:.92em}
+
+  /* chips */
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+  .chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:700;font-size:.88em;color:var(--muted)}
+  .chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+  .tag{display:inline-block;font-size:.75em;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--brand-soft);color:var(--brand-dark)}
+  .tag.t-question{background:#fff4d6;color:#8a6100}
+  .tag.t-story{background:var(--warm-soft);color:#a14a22}
+  .tag.t-tip{background:var(--green-soft);color:#1d6e54}
+  .tag.t-article{background:#e5f0ff;color:#2357a8}
+
+  /* composer */
+  .composer{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:18px}
+  .composer textarea{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;resize:vertical;min-height:84px;background:var(--bg)}
+  .composer textarea:focus{border-color:var(--brand);outline:none;background:#fff}
+  .composer-row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+  .composer select{border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff}
+  .btn{border:0;border-radius:999px;padding:10px 20px;font-weight:800;background:var(--brand);color:#fff;transition:.15s}
+  .btn:hover{background:var(--brand-dark)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+  .btn.ghost:hover{background:var(--brand-soft)}
+  .btn.warm{background:var(--warm)}
+  .btn.small{padding:6px 14px;font-size:.88em}
+  .spacer{flex:1}
+
+  /* post */
+  .post{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px}
+  .post-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;flex:none}
+  .post-head b{display:block;line-height:1.2}
+  .post-head small{color:var(--muted)}
+  .post-text{white-space:pre-wrap;word-wrap:break-word}
+  .post-actions{display:flex;gap:6px;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+  .act{background:none;border:0;border-radius:10px;padding:6px 12px;color:var(--muted);font-weight:700;font-size:.9em}
+  .act:hover{background:var(--bg)}
+  .act.on{color:#d6336c}
+  .comments{margin-top:10px}
+  .comment{display:flex;gap:10px;margin-top:10px}
+  .comment .av{width:32px;height:32px;font-size:.8em}
+  .comment div.c{background:var(--bg);border-radius:12px;padding:8px 12px;flex:1;white-space:pre-wrap;word-wrap:break-word}
+  .comment b{font-size:.88em}
+  .c-form{display:flex;gap:8px;margin-top:10px}
+  .c-form input{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:8px 14px}
+
+  /* article teaser in feed */
+  .post.article-teaser{display:grid;grid-template-columns:120px 1fr;gap:18px;cursor:pointer}
+  .post.article-teaser:hover{border-color:var(--brand)}
+  .cover{border-radius:14px;display:grid;place-items:center;font-size:44px;min-height:110px}
+
+  /* articles grid */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .acard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:.15s;text-align:left;padding:0}
+  .acard:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(60,40,140,.08)}
+  .acard .cover{border-radius:0;min-height:130px;font-size:52px}
+  .acard .in{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .acard h3{font-size:1.1em;margin:4px 0 0}
+  .acard p{margin:0;color:var(--muted);font-size:.93em}
+  .meta{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:.82em;margin-top:auto;padding-top:6px}
+  .ai-badge{font-size:.72em;font-weight:800;color:var(--brand);background:var(--brand-soft);padding:2px 8px;border-radius:6px}
+
+  /* article view */
+  .article{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .article .cover{border-radius:0;min-height:180px;font-size:76px}
+  .article .in{padding:28px 34px 34px}
+  .article h1{font-size:1.9em}
+  .article .lead{font-size:1.1em;color:var(--muted);margin-bottom:20px}
+  .article-body h3{margin-top:1.4em;font-size:1.2em}
+  .article-body p{margin:0 0 1em}
+  .article-body ul{margin:0 0 1em;padding-left:22px}
+  .article-body li{margin:4px 0}
+  .back{background:none;border:0;color:var(--brand);font-weight:800;padding:0;margin-bottom:14px}
+
+  /* quiz & joke */
+  .quiz button{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);font-weight:600}
+  .quiz button:hover:not(:disabled){border-color:var(--brand)}
+  .quiz button.right{background:var(--green-soft);border-color:var(--green)}
+  .quiz button.wrong{background:#fde8ec;border-color:#d6336c}
+  .quiz .expl{font-size:.9em;margin-top:10px}
+  .joke{font-style:italic}
+  .rubrics{list-style:none;padding:0;margin:0}
+  .rubrics li button{width:100%;text-align:left;background:none;border:0;padding:8px 6px;border-radius:10px;display:flex;justify-content:space-between;font-weight:700}
+  .rubrics li button:hover{background:var(--bg)}
+  .rubrics span.n{color:var(--muted);font-weight:600}
+  .editor-box{background:linear-gradient(135deg,var(--brand),#7a5ce0);color:#fff;border:0}
+  .editor-box p{color:rgba(255,255,255,.85);font-size:.9em;margin:0 0 12px}
+  .editor-box .btn{background:#fff;color:var(--brand-dark)}
+
+  .empty{text-align:center;padding:40px 20px;color:var(--muted)}
+
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(30,25,60,.45);display:grid;place-items:center;z-index:50;padding:16px}
+  .modal{background:#fff;border-radius:22px;max-width:720px;width:100%;max-height:92vh;overflow:auto;padding:26px}
+  .modal label{display:block;font-weight:800;margin:12px 0 6px}
+  .modal input,.modal select,.modal textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px}
+  .ideas{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .preview{margin-top:18px;border:1.5px dashed var(--line);border-radius:16px;padding:18px}
+  .stream{white-space:pre-wrap;font-size:.9em;color:var(--muted);max-height:240px;overflow:auto}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;z-index:60;font-weight:700}
+
+  @media (max-width:960px){
+    .layout{grid-template-columns:1fr}
+    .search{display:none}
+    .logo small{display:none}
+  }
+  @media (max-width:640px){
+    header .wrap{gap:10px}
+    .logo span.t{display:none}
+    .tabs a{padding:8px 12px}
+    .me .nm{display:none}
+    .grid{grid-template-columns:1fr}
+    .post.article-teaser{grid-template-columns:1fr}
+    .article .in{padding:20px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#feed"><span class="logo-mark">☀</span><span class="t">Тёплый круг<small>журнал и лента соцработников</small></span></a>
+    <nav class="tabs">
+      <a href="#feed" data-tab="feed">Лента</a>
+      <a href="#articles" data-tab="articles">Статьи</a>
+    </nav>
+    <label class="search"><input id="q" type="search" placeholder="Поиск по статьям и ленте" aria-label="Поиск"></label>
+    <span class="me" id="me"></span>
+    <span class="proto">ПРОТОТИП</span>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <main id="main"></main>
+  <aside id="aside"></aside>
+</div>
+
+<script>
+/* ---------- helpers ---------- */
+function h(tag, attrs, ...kids){
+  const el = document.createElement(tag);
+  if (attrs) for (const [k,v] of Object.entries(attrs)){
+    if (v == null || v === false) continue;
+    if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (k === 'class') el.className = v;
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : String(c));
+  return el;
+}
+const $ = s => document.querySelector(s);
+function ago(t){
+  const d = (Date.now() - t) / 1000;
+  if (d < 60) return 'только что';
+  if (d < 3600) return Math.floor(d/60) + ' мин назад';
+  if (d < 86400) return Math.floor(d/3600) + ' ч назад';
+  if (d < 172800) return 'вчера';
+  return new Date(t).toLocaleDateString('ru-RU', {day:'numeric', month:'long'});
+}
+const COLORS = ['#5b4bd1','#f08a5d','#2e9e7a','#d6336c','#2f7fd1','#b5651d','#7a5ce0','#13866f'];
+function colorFor(s){ let n = 0; for (const ch of String(s)) n = (n*31 + ch.charCodeAt(0)) >>> 0; return COLORS[n % COLORS.length]; }
+function toast(msg){ const t = h('div',{class:'toast',role:'status'},msg); document.body.append(t); setTimeout(()=>t.remove(), 2800); }
+
+const TAGS = {news:'Новость', question:'Вопрос коллегам', story:'История', tip:'Совет'};
+const CATS = {
+  care:{name:'Практика ухода', emoji:'🤲', bg:'#e2f5ee'},
+  psy:{name:'Психология и общение', emoji:'💬', bg:'#ece9fc'},
+  law:{name:'Право и льготы', emoji:'📋', bg:'#e5f0ff'},
+  self:{name:'Береги себя', emoji:'🌿', bg:'#fdeee6'},
+  fun:{name:'Досуг и идеи', emoji:'🎲', bg:'#fff4d6'},
+  story:{name:'Истории', emoji:'📖', bg:'#fde8ec'}
+};
+const cat = k => CATS[k] || {name:'Разное', emoji:'📰', bg:'#eee'};
+
+const QUIZ = [
+  {q:'Как часто рекомендуют менять положение тела лежачего человека для профилактики пролежней?', a:['Раз в сутки','Каждые 2 часа','Только при жалобах'], r:1, e:'Обычно — не реже чем каждые 2 часа, а при высоком риске чаще. Точный режим подскажет врач.'},
+  {q:'Что из этого НЕ относится к признакам инсульта (тест «УДАР»)?', a:['Асимметрия лица','Нарушение речи','Слабость в руке','Повышенный аппетит'], r:3, e:'«УДАР»: Улыбка, Движение, Артикуляция, Решение — срочно звонить 103.'},
+  {q:'Подопечный с деменцией уверен, что сейчас 1985 год. Как лучше поступить?', a:['Доказать, что он ошибается','Мягко переключить внимание на дело или воспоминание','Не разговаривать с ним'], r:1, e:'Спор вызывает тревогу. Лучше принять его реальность и бережно переключить внимание.'},
+  {q:'Какой признак может говорить об обезвоживании у пожилого человека?', a:['Сухость во рту и спутанность','Хороший аппетит','Частое мочеиспускание светлой мочой'], r:0, e:'У пожилых жажда ощущается слабее — предлагайте воду регулярно, если нет противопоказаний.'}
+];
+const JOKES = [
+  'Подопечная освоила видеозвонки. Теперь звонит внукам в 6 утра — «проверить, что связь работает».',
+  'Соцработник — это человек, который знает расписание всех поликлиник, цены во всех аптеках и имена всех котов на участке.',
+  '— Давление 130 на 80, отлично! — Странно, а по телевизору сказали, что сегодня магнитная буря.',
+  '— Бабушка, какой у вас пароль от вайфая? — Сначала поешь, потом скажу.',
+  'Лучший GPS в мире — подопечная, которая точно знает, в какой аптеке сегодня скидка пенсионерам.'
+];
+const dayN = Math.floor(Date.now() / 86400000);
+
+/* ---------- state ---------- */
+const S = {
+  tab:'feed', articleId:null, feedFilter:'all', catFilter:'all', q:'',
+  articles:[], posts:[], likes:{}, comments:[],
+  myId:null, isOwner:false, canEdit:false, canWrite:null, readOnly:false,
+  names:{}, loaded:{articles:false, posts:false}, slow:false,
+  db:null, user:null, sample:null, openComments:new Set(), quizPick:null
+};
+const mine = {posts:[], likes:{}, comments:[]};
+
+/* ---------- routing ---------- */
+function route(){
+  const hs = location.hash.slice(1);
+  if (hs.startsWith('a-')) { S.tab = 'article'; S.articleId = hs.slice(2); }
+  else { S.tab = hs === 'articles' ? 'articles' : 'feed'; S.articleId = null; }
+  render(); window.scrollTo(0,0);
+}
+window.addEventListener('hashchange', route);
+$('#q').addEventListener('input', e => { S.q = e.target.value.trim().toLowerCase(); if (S.tab === 'article') location.hash = 'articles'; else render(); });
+
+/* ---------- names ---------- */
+function nameOf(id){
+  if (id === 'editorial') return 'Редакция «Тёплого круга»';
+  return S.names[id] || 'Коллега';
+}
+let nameReq = null;
+async function loadNames(ids){
+  if (!S.user || !S.user.profiles) return;
+  const need = [...new Set(ids)].filter(id => id && id !== 'editorial' && !(id in S.names));
+  if (!need.length) return;
+  need.forEach(id => S.names[id] = '');
+  try {
+    const ps = await S.user.profiles(need);
+    need.forEach(id => S.names[id] = (ps && ps[id] && ps[id].name) || '');
+    clearTimeout(nameReq); nameReq = setTimeout(render, 30);
+  } catch(e) {}
+}
+function avatar(id){
+  const n = nameOf(id);
+  return h('span',{class:'av', style:'background:'+(id==='editorial'?'linear-gradient(135deg,#5b4bd1,#f08a5d)':colorFor(id))}, id==='editorial'?'☀':(n[0]||'К').toUpperCase());
+}
+
+/* ---------- writes (one at a time per doc) ---------- */
+let q = Promise.resolve();
+function enqueue(fn){
+  q = q.then(fn).catch(e => {
+    if (e && e.code === 'invalid_argument') { S.readOnly = true; toast('У вас нет прав на публикацию в этом портале'); render(); }
+    else if (e && e.code === 'quota_exceeded') toast('Хранилище портала заполнено — сообщите администратору');
+    else toast('Не удалось сохранить, попробуйте ещё раз');
+  });
+  return q;
+}
+function canWrite(){ return S.db && S.myId && S.canWrite !== false && !S.readOnly; }
+
+function addPost(text, tag){
+  const item = {id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), text, tag, createdAt: Date.now()};
+  mine.posts = [item, ...mine.posts];
+  return enqueue(() => S.db.doc('posts/' + S.myId).set({items: mine.posts}));
+}
+function deletePost(author, pid){
+  if (author === S.myId){
+    mine.posts = mine.posts.filter(p => p.id !== pid);
+    return enqueue(() => S.db.doc('posts/' + S.myId).set({items: mine.posts}));
+  }
+  const all = S.posts.filter(p => p.author === author && p.id !== pid).map(({author, ...rest}) => rest);
+  return enqueue(() => S.db.doc('posts/' + author).set({items: all}));
+}
+function toggleLike(key){
+  const next = {...mine.likes};
+  if (next[key]) delete next[key]; else next[key] = Date.now();
+  mine.likes = next; render();
+  return enqueue(() => S.db.doc('likes/' + S.myId).set({keys: mine.likes}));
+}
+function addComment(key, text){
+  mine.comments = [...mine.comments, {id: Date.now().toString(36), key, text, createdAt: Date.now()}];
+  return enqueue(() => S.db.doc('comments/' + S.myId).set({items: mine.comments}));
+}
+
+/* ---------- data helpers ---------- */
+function likeCount(key){ let n = 0; for (const uid in S.likes) if (S.likes[uid][key]) n++; return n; }
+function commentsFor(key){ return S.comments.filter(c => c.key === key).sort((a,b)=>a.createdAt-b.createdAt); }
+function matches(...fields){ return !S.q || fields.some(f => String(f||'').toLowerCase().includes(S.q)); }
+
+/* ---------- components ---------- */
+function likeBtn(key, label){
+  const on = !!(S.likes[S.myId] || {})[key];
+  return h('button',{class:'act'+(on?' on':''), disabled: !canWrite() || null, onclick:()=>toggleLike(key), 'aria-pressed':String(on)}, (on?'❤️ ':'🤍 ') + (label||'') + ' ' + (likeCount(key)||''));
+}
+function commentsBlock(key){
+  const list = commentsFor(key);
+  const input = h('input',{placeholder:'Написать комментарий…', maxlength:'1000', 'aria-label':'Комментарий'});
+  const send = () => { const t = input.value.trim(); if (!t) return; addComment(key, t); input.value=''; render(); };
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+  return h('div',{class:'comments'},
+    list.map(c => h('div',{class:'comment'}, avatar(c.author), h('div',{class:'c'}, h('b',null,nameOf(c.author)), ' ', h('small',{class:'muted'}, ago(c.createdAt)), h('br'), c.text))),
+    canWrite() ? h('div',{class:'c-form'}, input, h('button',{class:'btn small', onclick:send},'Отправить')) : null
+  );
+}
+function postCard(p){
+  const key = 'p/' + p.author + '/' + p.id;
+  const open = S.openComments.has(key);
+  const nC = commentsFor(key).length;
+  const canDel = canWrite() && (p.author === S.myId || S.isOwner);
+  return h('article',{class:'post'},
+    h('div',{class:'post-head'}, avatar(p.author),
+      h('div',null, h('b',null,nameOf(p.author)), h('small',null, ago(p.createdAt))),
+      h('span',{class:'spacer'}),
+      TAGS[p.tag] ? h('span',{class:'tag t-'+p.tag}, TAGS[p.tag]) : null),
+    h('div',{class:'post-text'}, p.text),
+    h('div',{class:'post-actions'},
+      likeBtn(key),
+      h('button',{class:'act', onclick:()=>{ open?S.openComments.delete(key):S.openComments.add(key); render(); }}, '💬 ' + (nC || 'Обсудить')),
+      h('span',{class:'spacer'}),
+      canDel ? h('button',{class:'act', onclick:()=>{ deletePost(p.author, p.id); render(); }}, 'Удалить') : null),
+    open ? commentsBlock(key) : null
+  );
+}
+function cover(a, cls){ const c = cat(a.category); return h('div',{class:'cover '+(cls||''), style:'background:'+c.bg}, a.emoji || c.emoji); }
+function articleTeaser(a){
+  return h('article',{class:'post article-teaser', onclick:()=>location.hash='a-'+a.id, tabindex:'0', onkeydown:e=>{if(e.key==='Enter')location.hash='a-'+a.id;}},
+    cover(a),
+    h('div',null,
+      h('div',{style:'display:flex;gap:8px;align-items:center;margin-bottom:6px'}, h('span',{class:'tag t-article'},'Новая статья'), h('small',{class:'muted'}, cat(a.category).name + ' · ' + ago(a.createdAt))),
+      h('h3',null,a.title), h('p',{class:'muted',style:'margin:0'}, a.summary)));
+}
+function articleCard(a){
+  return h('button',{class:'acard', onclick:()=>location.hash='a-'+a.id},
+    cover(a),
+    h('div',{class:'in'},
+      h('span',{class:'tag', style:'align-self:flex-start;background:'+cat(a.category).bg+';color:var(--ink)'}, cat(a.category).name),
+      h('h3',null,a.title), h('p',null,a.summary),
+      h('div',{class:'meta'}, h('span',null,'⏱ ' + (a.readMin||3) + ' мин'), h('span',null,'❤️ ' + likeCount('a/'+a.id)), h('span',null,'💬 ' + commentsFor('a/'+a.id).length), h('span',{class:'spacer'}), a.source==='ai'?h('span',{class:'ai-badge'},'✨ подготовлено ИИ'):null)));
+}
+function renderBody(text){
+  const out = []; let ul = null, para = [];
+  const flush = () => { if (para.length){ out.push(h('p',null,para.join(' '))); para=[]; } };
+  for (const raw of String(text||'').split('\n')){
+    const line = raw.trim();
+    if (!line){ flush(); ul = null; continue; }
+    if (line.startsWith('## ')){ flush(); ul = null; out.push(h('h3',null,line.slice(3))); continue; }
+    if (/^[-•] /.test(line)){ flush(); if (!ul){ ul = h('ul'); out.push(ul); } ul.append(h('li',null,line.slice(2))); continue; }
+    ul = null; para.push(line);
+  }
+  flush(); return out;
+}
+function loadingOr(key, emptyEl){
+  if (!S.db) return h('div',{class:'empty'}, '📡 Лента и статьи хранятся в базе портала. Откройте страницу на claude.ai, войдя в аккаунт.');
+  if (!S.loaded[key]) return h('div',{class:'empty'}, S.slow ? 'Не удаётся связаться с базой. Проверьте интернет — данные появятся автоматически.' : 'Загружаем…');
+  return emptyEl;
+}
+
+/* ---------- views ---------- */
+function viewFeed(){
+  const composer = (() => {
+    if (!canWrite()) return S.db && S.canWrite === false || S.readOnly ? h('div',{class:'notice'}, 'Вы можете читать ленту. Чтобы публиковать посты, попросите администратора дать вам доступ «Участник».') : null;
+    const ta = h('textarea',{placeholder:'Чем поделитесь с коллегами? Новость, вопрос, история с выезда…', maxlength:'3000', 'aria-label':'Текст поста'});
+    const sel = h('select',{'aria-label':'Тип поста'}, Object.entries(TAGS).map(([k,v]) => h('option',{value:k},v)));
+    const btn = h('button',{class:'btn'},'Опубликовать');
+    btn.onclick = () => { const t = ta.value.trim(); if (!t) { ta.focus(); return; } addPost(t, sel.value); ta.value=''; toast('Опубликовано в ленте'); render(); };
+    return h('div',{class:'composer'}, ta, h('div',{class:'composer-row'}, sel, h('span',{class:'spacer'}), h('small',{class:'muted'},'Не публикуйте личные данные подопечных'), btn));
+  })();
+
+  const filters = [['all','Всё'],['news','Новости'],['question','Вопросы'],['story','Истории'],['tip','Советы'],['article','Статьи']];
+  let items = [
+    ...S.posts.map(p => ({kind:'post', t:p.createdAt, p})),
+    ...S.articles.map(a => ({kind:'article', t:a.createdAt, a}))
+  ];
+  if (S.feedFilter === 'article') items = items.filter(i => i.kind === 'article');
+  else if (S.feedFilter !== 'all') items = items.filter(i => i.kind === 'post' && i.p.tag === S.feedFilter);
+  items = items.filter(i => i.kind === 'post' ? matches(i.p.text) : matches(i.a.title, i.a.summary, i.a.body));
+  items.sort((x,y) => y.t - x.t);
+
+  return [
+    composer,
+    h('div',{class:'chips'}, filters.map(([k,v]) => h('button',{class:'chip'+(S.feedFilter===k?' active':''), onclick:()=>{S.feedFilter=k; render();}}, v))),
+    (S.loaded.posts || S.loaded.articles) && items.length
+      ? items.map(i => i.kind === 'post' ? postCard(i.p) : articleTeaser(i.a))
+      : loadingOr('posts', h('div',{class:'empty'}, S.q ? 'Ничего не нашлось.' : 'Здесь пока тихо. Напишите первый пост!'))
+  ];
+}
+function viewArticles(){
+  const list = S.articles
+    .filter(a => S.catFilter === 'all' || a.category === S.catFilter)
+    .filter(a => matches(a.title, a.summary, a.body))
+    .sort((x,y) => y.createdAt - x.createdAt);
+  return [
+    h('h2',null,'Статьи'),
+    h('p',{class:'muted',style:'margin-top:-4px'},'Полезное и интересное для работы и отдыха. Материалы готовит ИИ-редакция, проверяют кураторы.'),
+    h('div',{class:'chips'},
+      h('button',{class:'chip'+(S.catFilter==='all'?' active':''), onclick:()=>{S.catFilter='all'; render();}}, 'Все'),
+      Object.entries(CATS).map(([k,c]) => h('button',{class:'chip'+(S.catFilter===k?' active':''), onclick:()=>{S.catFilter=k; render();}}, c.emoji+' '+c.name))),
+    S.loaded.articles && list.length
+      ? h('div',{class:'grid'}, list.map(articleCard))
+      : loadingOr('articles', h('div',{class:'empty'}, S.q || S.catFilter!=='all' ? 'В этой рубрике пока ничего не нашлось.' : 'Статей пока нет.'))
+  ];
+}
+function viewArticle(){
+  const a = S.articles.find(x => x.id === S.articleId);
+  const back = h('button',{class:'back', onclick:()=>location.hash='articles'},'← Все статьи');
+  if (!a) return [back, loadingOr('articles', h('div',{class:'empty'},'Статья не найдена или была удалена.'))];
+  const key = 'a/' + a.id;
+  return [back, h('article',{class:'article'},
+    cover(a),
+    h('div',{class:'in'},
+      h('div',{class:'meta',style:'margin:0 0 10px'}, h('span',null,cat(a.category).name), h('span',null,'⏱ '+(a.readMin||3)+' мин'), h('span',null,ago(a.createdAt)), a.source==='ai'?h('span',{class:'ai-badge'},'✨ подготовлено ИИ'):null),
+      h('h1',null,a.title),
+      h('p',{class:'lead'},a.summary),
+      h('div',{class:'article-body'}, renderBody(a.body)),
+      h('div',{class:'post-actions'}, likeBtn(key,'Полезно'), h('span',{class:'spacer'}),
+        S.canEdit && canWrite() ? h('button',{class:'act', onclick:()=>confirmBox('Удалить статью «'+a.title+'»?', ()=>enqueue(()=>S.db.doc('articles/'+a.id).delete()).then(()=>{location.hash='articles';}))},'Удалить статью') : null),
+      h('h3',{style:'margin-top:20px'},'Обсуждение'),
+      commentsBlock(key),
+      commentsFor(key).length ? null : h('p',{class:'muted'},'Комментариев пока нет — поделитесь опытом.')
+    ))];
+}
+function confirmBox(text, onYes){
+  const bg = h('div',{class:'modal-bg', onclick:e=>{ if(e.target===bg) bg.remove(); }},
+    h('div',{class:'modal',style:'max-width:420px'}, h('p',{style:'font-weight:700'},text),
+      h('div',{class:'composer-row'}, h('span',{class:'spacer'}), h('button',{class:'btn ghost', onclick:()=>bg.remove()},'Отмена'), h('button',{class:'btn warm', onclick:()=>{bg.remove(); onYes();}},'Удалить'))));
+  document.body.append(bg);
+}
+
+function viewAside(){
+  const qz = QUIZ[dayN % QUIZ.length];
+  const quiz = h('div',{class:'box quiz'}, h('h3',null,'🧠 Вопрос дня'), h('p',{style:'margin:0 0 6px;font-weight:700'},qz.q),
+    qz.a.map((opt,i) => {
+      let cls = '';
+      if (S.quizPick != null){ if (i === qz.r) cls='right'; else if (i === S.quizPick) cls='wrong'; }
+      return h('button',{class:cls, disabled:S.quizPick!=null||null, onclick:()=>{S.quizPick=i; render();}}, opt);
+    }),
+    S.quizPick != null ? h('div',{class:'expl'}, (S.quizPick===qz.r?'✅ Верно! ':'Почти! ') + qz.e) : null);
+  const joke = h('div',{class:'box'}, h('h3',null,'😊 Улыбка дня'), h('p',{class:'joke',style:'margin:0'}, JOKES[dayN % JOKES.length]));
+  const counts = {}; S.articles.forEach(a => counts[a.category] = (counts[a.category]||0)+1);
+  const rub = h('div',{class:'box'}, h('h3',null,'📚 Рубрики'), h('ul',{class:'rubrics'},
+    Object.entries(CATS).map(([k,c]) => h('li',null, h('button',{onclick:()=>{S.catFilter=k; location.hash='articles'; if(S.tab==='articles') render();}}, h('span',null,c.emoji+' '+c.name), h('span',{class:'n'}, counts[k]||0))))));
+  const editor = S.canEdit && S.sample && canWrite()
+    ? h('div',{class:'box editor-box'}, h('h3',null,'✨ ИИ-редакция'), h('p',null,'Предложите тему — нейросеть напишет статью, вы проверите и опубликуете.'), h('button',{class:'btn', onclick:openGenerator},'Новая статья с ИИ'))
+    : null;
+  return [editor, quiz, joke, rub];
+}
+
+function render(){
+  document.querySelectorAll('.tabs a').forEach(a => a.classList.toggle('active', a.dataset.tab === (S.tab==='article'?'articles':S.tab)));
+  const main = $('#main');
+  main.replaceChildren(...[S.tab==='feed'?viewFeed():S.tab==='articles'?viewArticles():viewArticle()].flat(Infinity).filter(Boolean));
+  $('#aside').replaceChildren(...viewAside().filter(Boolean));
+  loadNames([...S.posts.map(p=>p.author), ...S.comments.map(c=>c.author)]);
+}
+
+/* ---------- AI generator (editors) ---------- */
+function openGenerator(){
+  let draft = null, ctrl = null;
+  const topic = h('input',{placeholder:'Например: как помочь подопечному пережить одиночество зимой'});
+  const catSel = h('select',null, Object.entries(CATS).map(([k,c]) => h('option',{value:k}, c.emoji+' '+c.name)));
+  const ideas = h('div',{class:'ideas'});
+  const out = h('div');
+  const genBtn = h('button',{class:'btn'},'✨ Написать статью');
+  const ideaBtn = h('button',{class:'btn ghost small'},'Предложить темы');
+  const close = () => { if (ctrl) ctrl.abort(); bg.remove(); };
+  const bg = h('div',{class:'modal-bg', onclick:e=>{ if(e.target===bg) close(); }},
+    h('div',{class:'modal', role:'dialog', 'aria-label':'Новая статья с ИИ'},
+      h('div',{class:'composer-row',style:'margin:0'}, h('h2',{style:'margin:0'},'✨ Новая статья с ИИ'), h('span',{class:'spacer'}), h('button',{class:'act', onclick:close},'✕')),
+      h('label',null,'Рубрика'), catSel,
+      h('label',null,'Тема'), topic,
+      h('div',{class:'composer-row'}, ideaBtn, h('span',{class:'spacer'}), genBtn),
+      ideas, out));
+  document.body.append(bg); topic.focus();
+
+  ideaBtn.onclick = async () => {
+    ideaBtn.disabled = true; ideas.replaceChildren(h('span',{class:'muted'},'Подбираем темы…'));
+    try {
+      const existing = S.articles.map(a => a.title).join('; ');
+      const list = await S.sample.json(`Ты редактор познавательно-развлекательного портала для социальных работников в России, которые ухаживают за пожилыми людьми на дому. Предложи 5 свежих, конкретных и интересных тем статей для рубрики «${cat(catSel.value).name}». Не повторяй уже опубликованные: ${existing}. Верни JSON-массив из 5 строк на русском, без пояснений.`, {modelTier:'quick'});
+      ideas.replaceChildren(...(Array.isArray(list)?list:[]).slice(0,5).map(t => h('button',{class:'chip', onclick:()=>{topic.value=String(t);}}, String(t))));
+    } catch(e){ ideas.replaceChildren(h('span',{class:'muted'}, e && e.code==='rate_limited' ? 'Слишком много запросов, подождите минуту.' : 'Не получилось подобрать темы.')); }
+    ideaBtn.disabled = false;
+  };
+
+  genBtn.onclick = async () => {
+    const t = topic.value.trim(); if (!t){ topic.focus(); return; }
+    genBtn.disabled = true; draft = null;
+    const stream = h('div',{class:'stream'},'ИИ пишет статью…');
+    out.replaceChildren(h('div',{class:'preview'}, stream));
+    ctrl = new AbortController();
+    try {
+      const prompt = `Ты автор познавательно-развлекательного портала «Тёплый круг» для социальных работников в России, которые помогают пожилым людям на дому (бытовая, гигиеническая, социальная помощь).
+Напиши статью на тему: «${t}». Рубрика: «${cat(catSel.value).name}».
+Требования: тёплый, уважительный, живой тон; практичные советы; 350–550 слов; без медицинских назначений (при необходимости советуй обратиться к врачу); не выдумывай законы, номера приказов и статистику — если речь о правилах, советуй уточнять в своём учреждении.
+Верни ТОЛЬКО JSON-объект: {"title": "заголовок до 80 символов", "summary": "1–2 предложения анонса", "emoji": "одно эмодзи", "readMin": число минут чтения, "body": "текст статьи"}.
+В body: абзацы разделяй пустой строкой, подзаголовки начинай с "## ", пункты списков — с "- ".`;
+      const v = await S.sample.json(prompt, {modelTier:'default', signal:ctrl.signal, onText:({text}) => { stream.textContent = text; stream.scrollTop = stream.scrollHeight; }});
+      if (!v || !v.title || !v.body) throw {code:'bad'};
+      draft = {title:String(v.title).slice(0,140), summary:String(v.summary||'').slice(0,400), emoji:String(v.emoji||cat(catSel.value).emoji).slice(0,4), readMin:Math.max(1,Math.min(30,parseInt(v.readMin)||4)), body:String(v.body), category:catSel.value};
+      const pub = h('button',{class:'btn warm'},'Опубликовать');
+      pub.onclick = () => {
+        const id = 'ai-' + Date.now().toString(36);
+        enqueue(() => S.db.doc('articles/'+id).set({...draft, source:'ai', topic:t, createdAt:Date.now()})).then(() => { close(); toast('Статья опубликована'); location.hash = 'a-'+id; });
+      };
+      out.replaceChildren(h('div',{class:'preview'},
+        h('small',{class:'muted'},'Черновик — проверьте перед публикацией'),
+        h('h2',null,(draft.emoji||'')+' '+draft.title), h('p',{class:'muted'},draft.summary),
+        h('div',{class:'article-body'}, renderBody(draft.body)),
+        h('div',{class:'composer-row'}, h('button',{class:'btn ghost', onclick:()=>genBtn.click()},'Переписать'), h('span',{class:'spacer'}), pub)));
+    } catch(e){
+      if (e && e.name === 'AbortError') return;
+      out.replaceChildren(h('div',{class:'notice'}, e && e.code==='rate_limited' ? 'Слишком много запросов — попробуйте через минуту.' : e && e.code==='not_granted' ? 'ИИ недоступен в этом просмотре.' : 'Не получилось сгенерировать статью. Попробуйте переформулировать тему.'));
+    }
+    genBtn.disabled = false;
+  };
+}
+
+/* ---------- boot ---------- */
+route();
+(async () => {
+  const cl = window.claude;
+  if (!cl || !cl.use) { render(); return; }
+  const [db, user, sample] = await Promise.all([cl.use('db'), cl.use('user'), cl.use('sample')]);
+  S.db = db; S.user = user; S.sample = sample;
+  if (user){
+    try { S.myId = await user.id(); } catch(e){}
+    try { S.isOwner = !!(await user.isOwner()); } catch(e){}
+    try { S.canEdit = !!(await user.canEdit()); } catch(e){}
+    try { S.canWrite = await user.can('data.write'); } catch(e){}
+    try { const me = await user.me(); if (me && S.myId) S.names[S.myId] = me.name || ''; if (me) $('#me').replaceChildren(avatar(S.myId), h('span',{class:'nm'}, me.name || '')); } catch(e){}
+  }
+  if (!db){ render(); return; }
+  const timer = setTimeout(() => { S.slow = true; render(); }, 10000);
+  const done = key => { S.loaded[key] = true; clearTimeout(timer); };
+  const onErr = key => () => { done(key); render(); };
+
+  db.collection('articles').onSnapshot(snap => {
+    S.articles = snap.docs.map(d => ({id:d.id, ...d.data()})).filter(a => a.title);
+    if (!snap.metadata || !snap.metadata.fromCache) done('articles');
+    render();
+  }, onErr('articles'));
+  db.collection('posts').onSnapshot(snap => {
+    const all = [];
+    snap.docs.forEach(d => { const items = (d.data() || {}).items; if (Array.isArray(items)) items.forEach(it => it && it.text && all.push({...it, author:d.id})); if (d.id === S.myId && Array.isArray(items)) mine.posts = items; });
+    S.posts = all;
+    if (!snap.metadata || !snap.metadata.fromCache) done('posts');
+    render();
+  }, onErr('posts'));
+  db.collection('likes').onSnapshot(snap => {
+    S.likes = {}; snap.docs.forEach(d => { S.likes[d.id] = (d.data() || {}).keys || {}; });
+    if (S.myId) mine.likes = S.likes[S.myId] || {};
+    render();
+  }, () => {});
+  db.collection('comments').onSnapshot(snap => {
+    const all = [];
+    snap.docs.forEach(d => { const items = (d.data() || {}).items; if (Array.isArray(items)) items.forEach(c => c && c.text && all.push({...c, author:d.id})); if (d.id === S.myId && Array.isArray(items)) mine.comments = items; });
+    S.comments = all; render();
+  }, () => {});
+  render();
+})();
+</script>
+</body>
+</html>
